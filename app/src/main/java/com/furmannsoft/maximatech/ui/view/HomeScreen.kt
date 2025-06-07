@@ -70,9 +70,9 @@ fun HomeScreen(
         )
 
         SearchBar(
-            query = searchText,
+            query = state.searchQuery,
             onQueryChanged = {
-                searchText = it
+                onIntent(ShoesIntent.SearchShoes(it))
             },
             onSearchClicked = {
             }
@@ -99,8 +99,8 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(state.shoes.size) { index ->
-                    val shoe = state.shoes[index]
+                items(state.filteredShoes.size) { index ->
+                    val shoe = state.filteredShoes[index]
                     ItemComponent(shoe)
                 }
             }
