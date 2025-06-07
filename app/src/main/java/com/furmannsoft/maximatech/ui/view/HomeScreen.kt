@@ -40,13 +40,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.furmannsoft.maximatech.model.ShoesIntent
+import com.furmannsoft.maximatech.model.ShoesState
 import com.furmannsoft.maximatech.ui.components.ItemComponent
 import com.furmannsoft.maximatech.viewModel.ShoesViewModel
 
 @Composable
-fun HomeScreen(viewModel: ShoesViewModel) {
-
-    val state by viewModel.state.collectAsState()
+fun HomeScreen(
+    state: ShoesState,
+    onIntent: (ShoesIntent) -> Unit
+) {
     var searchText by remember { mutableStateOf("") }
 
     val filters = listOf("Todos", "Tênis", "Botas", "Chuteiras", "Sapatênis")
@@ -65,12 +68,22 @@ fun HomeScreen(viewModel: ShoesViewModel) {
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineMedium
         )
-        SearchBar()
+
+        SearchBar(
+            query = searchText,
+            onQueryChanged = {
+                searchText = it
+            },
+            onSearchClicked = {
+            }
+        )
 
         FilterChips(
             filters = filters,
             selectedFilter = selectedFilter,
-            onFilterSelected = { selectedFilter = it }
+            onFilterSelected = {
+                selectedFilter = it
+            }
         )
 
         if (state.isLoading) {
