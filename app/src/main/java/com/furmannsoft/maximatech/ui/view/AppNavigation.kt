@@ -7,9 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.furmannsoft.maximatech.model.ShoesIntent
 import com.furmannsoft.maximatech.viewModel.ShoesViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -34,7 +37,8 @@ fun AppNavigation(modifier: Modifier = Modifier, context: Context) {
 
             HomeScreen(
                 state = state,
-                onIntent = viewModel::onEvent
+                onIntent = viewModel::onEvent,
+                navController
             )
         }
 
@@ -44,6 +48,25 @@ fun AppNavigation(modifier: Modifier = Modifier, context: Context) {
 
         composable("profileScreen") {
             ProlifeScreen(modifier)
+        }
+
+        composable(
+            "shoesDetailsScreen/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getInt("itemId") ?: return@composable
+
+            // Pega o ViewModel via Koin
+            val viewModel: ShoesViewModel = getViewModel()
+
+            val shoe = viewModel.getShoeById(itemId)
+            shoe?.let {
+                ShoesDetailsScreen(
+                    shoe = it,
+                    onFavoriteClick = { shoeClicked ->  },
+                    onAddToCartClick = { shoeClicked -> }
+                )
+            }
         }
     }
 }

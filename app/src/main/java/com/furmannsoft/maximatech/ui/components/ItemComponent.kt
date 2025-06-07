@@ -1,5 +1,6 @@
 package com.furmannsoft.maximatech.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,11 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.furmannsoft.maximatech.model.Shoes
 
 @Composable
-fun ItemComponent(shoes: Shoes, modifier: Modifier = Modifier) {
+fun ItemComponent(shoes: Shoes, modifier: Modifier = Modifier, navController: NavController) {
+
     Column(
         modifier = modifier
             .width(160.dp)
@@ -34,7 +37,10 @@ fun ItemComponent(shoes: Shoes, modifier: Modifier = Modifier) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp),
+                .height(120.dp)
+                .clickable {
+                    navController.navigate("shoesDetailsScreen/${shoes.itemId}")
+                },
             shape = RoundedCornerShape(12.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
@@ -64,22 +70,4 @@ fun ItemComponent(shoes: Shoes, modifier: Modifier = Modifier) {
             color = Color.Gray
         )
     }
-}
-
-@Composable
-@Preview
-fun  ItemCmponentPreview() {
-
-    val sampleShoes = Shoes(
-        imageUrl = 4,
-        itemId = 1,
-        product = "Fone Bluetooth",
-        description = "Fone com cancelamento de ruído",
-        favorite = true,
-        price = 149.99,
-        star = 4
-    )
-
-    ItemComponent(shoes = sampleShoes)
-
 }

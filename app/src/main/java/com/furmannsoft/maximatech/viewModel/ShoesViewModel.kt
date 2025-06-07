@@ -1,6 +1,7 @@
 package com.furmannsoft.maximatech.viewModel
 
 import androidx.lifecycle.ViewModel
+import com.furmannsoft.maximatech.model.Shoes
 import com.furmannsoft.maximatech.model.ShoesIntent
 import com.furmannsoft.maximatech.model.ShoesState
 import com.furmannsoft.maximatech.repository.ShoesRepository
@@ -59,5 +60,9 @@ class ShoesViewModel(
                 _state.value = _state.value.copy(shoes = filtered)
             }
         }
+    }
+
+    fun getShoeById(id: Int): Shoes? {
+        return repository.shoesList.find { it.itemId == id }
     }
 }

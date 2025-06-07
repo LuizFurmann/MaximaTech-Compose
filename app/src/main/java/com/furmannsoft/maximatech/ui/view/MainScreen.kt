@@ -67,7 +67,7 @@ fun MainScreen(
         }
     ) { paddingValues  ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            ContentScreen(modifier = Modifier.fillMaxSize(), selectedIndex, shoesViewModel)
+            ContentScreen(modifier = Modifier.fillMaxSize(), selectedIndex, shoesViewModel, navController)
         }
     }
 
@@ -78,12 +78,14 @@ fun MainScreen(
 fun ContentScreen(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    shoesViewModel: ShoesViewModel
+    shoesViewModel: ShoesViewModel,
+    navController: NavController
 ) {
     when(selectedIndex) {
         0-> HomeScreen(
             state = shoesViewModel.state.collectAsState().value,
-            onIntent = shoesViewModel::onEvent
+            onIntent = shoesViewModel::onEvent,
+            navController
         )
         1-> CartScreen(modifier)
         2-> ProlifeScreen(modifier)

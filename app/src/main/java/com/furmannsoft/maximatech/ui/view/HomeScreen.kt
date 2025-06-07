@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.furmannsoft.maximatech.model.ShoesIntent
 import com.furmannsoft.maximatech.model.ShoesState
 import com.furmannsoft.maximatech.ui.components.ItemComponent
@@ -48,7 +49,8 @@ import com.furmannsoft.maximatech.viewModel.ShoesViewModel
 @Composable
 fun HomeScreen(
     state: ShoesState,
-    onIntent: (ShoesIntent) -> Unit
+    onIntent: (ShoesIntent) -> Unit,
+    navController: NavController
 ) {
     var searchText by remember { mutableStateOf("") }
 
@@ -101,7 +103,7 @@ fun HomeScreen(
             ) {
                 items(state.filteredShoes.size) { index ->
                     val shoe = state.filteredShoes[index]
-                    ItemComponent(shoe)
+                    ItemComponent(shoe, modifier = Modifier, navController)
                 }
             }
         }
