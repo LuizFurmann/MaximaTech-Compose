@@ -37,8 +37,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.furmannsoft.maximatech.R
 import com.furmannsoft.maximatech.model.Shoes
+import com.furmannsoft.maximatech.ui.theme.Dark
+import com.furmannsoft.maximatech.ui.theme.Orange
 
 @Composable
 fun ShoesDetailsScreen(
@@ -80,8 +83,9 @@ fun ShoesDetailsScreen(
                     ) {
                         Text(
                             text = shoe.product,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Dark,
                         )
                         IconButton(onClick = { onFavoriteClick(shoe) }) {
                             Icon(
@@ -129,9 +133,10 @@ fun ShoesDetailsScreen(
 
                     Text(
                         text = "R$ %.2f".format(shoe.price),
-                        style = MaterialTheme.typography.headlineSmall,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 50.dp, bottom = 16.dp)
+                        modifier = Modifier.padding(top = 50.dp, bottom = 16.dp),
+                        color = Dark,
                     )
                 }
 
@@ -147,8 +152,8 @@ fun ShoesDetailsScreen(
                             .weight(1f)
                             .height(48.dp)
                             .clickable { onAddToCartClick(shoe) },
-                        shape = RoundedCornerShape(15.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFA726))
+                        shape = RoundedCornerShape(20.dp),
+                        colors = CardDefaults.cardColors(containerColor = Orange)
                     ) {
                         Box(
                             contentAlignment = Alignment.Center,
@@ -157,7 +162,7 @@ fun ShoesDetailsScreen(
                             Text(
                                 text = "Adicionar no carrinho",
                                 color = Color.White,
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -165,14 +170,14 @@ fun ShoesDetailsScreen(
 
                     Card(
                         modifier = Modifier.size(48.dp),
-                        shape = RoundedCornerShape(15.dp),
+                        shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
-                        border = BorderStroke(1.dp, Color(0xFFFFA726))
+                        border = BorderStroke(1.dp, Orange)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
                             contentDescription = "Carrinho",
-                            tint = Color(0xFFFFA726),
+                            tint = Orange,
                             modifier = Modifier.padding(12.dp)
                         )
                     }

@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.furmannsoft.maximatech.R
 import com.furmannsoft.maximatech.model.Shoes
 
 @Composable
@@ -30,44 +32,67 @@ fun ItemComponent(shoes: Shoes, modifier: Modifier = Modifier, navController: Na
 
     Column(
         modifier = modifier
-            .width(160.dp)
+            .width(170.dp)
             .padding(8.dp)
     ) {
-        // Card com imagem
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
+                .height(150.dp)
                 .clickable {
                     navController.navigate("shoesDetailsScreen/${shoes.itemId}")
                 },
             shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF6F6F6)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {
             AsyncImage(
                 model = shoes.imageUrl,
                 contentDescription = shoes.imageUrl.toString(),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize()
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Nome do produto
         Text(
             text = shoes.product,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.LightGray,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
 
-        // Preço do produto
         Text(
-            text = shoes.price.toString(),
+            text = "R$ %.2f".format(shoes.price),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ItemComponentPreview() {
+    val mockShoes = Shoes(
+        imageUrl = R.drawable.shoes2,
+        itemId = 1,
+        product = "Tênis Esportivo",
+        description = "Tênis leve e confortável para corridas.",
+        favorite = true,
+        price = 199.99,
+        star = 4
+    )
+
+    val navController = rememberNavController()
+
+    MaterialTheme {
+        ItemComponent(
+            shoes = mockShoes,
+            navController = navController
         )
     }
 }

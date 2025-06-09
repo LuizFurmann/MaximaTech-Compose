@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +24,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,12 +42,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.furmannsoft.maximatech.R
+import com.furmannsoft.maximatech.model.Shoes
 import com.furmannsoft.maximatech.model.ShoesIntent
 import com.furmannsoft.maximatech.model.ShoesState
 import com.furmannsoft.maximatech.ui.components.ItemComponent
+import com.furmannsoft.maximatech.ui.theme.Orange
 import com.furmannsoft.maximatech.viewModel.ShoesViewModel
 
 @Composable
@@ -66,9 +77,11 @@ fun HomeScreen(
             text = "Olá, Luiz",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(vertical = 16.dp)
+                .padding(top = 40.dp),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineMedium
+            fontWeight = FontWeight.Bold,
+            fontSize = 17.sp
         )
 
         SearchBar(
@@ -126,11 +139,16 @@ fun SearchBar(
         OutlinedTextField(
             value = query,
             onValueChange = onQueryChanged,
-            placeholder = { Text("Pesquisar") },
+            placeholder = {
+                Text(
+                    "Pesquisar",
+                    color = Color.LightGray
+                )
+            },
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 8.dp),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(20.dp),
             maxLines = 1,
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
@@ -142,8 +160,8 @@ fun SearchBar(
         Box(
             modifier = Modifier
                 .size(53.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFFF9800))
+                .clip(RoundedCornerShape(20.dp))
+                .background(Orange)
                 .clickable(onClick = onSearchClicked),
             contentAlignment = Alignment.Center
         ) {
@@ -165,29 +183,95 @@ fun FilterChips(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
+            .padding(top = 16.dp)
+            .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(filters) { filter ->
             val isSelected = filter == selectedFilter
+            val backgroundColor = if (isSelected) Orange else Color.White
+            val contentColor = if (isSelected) Color.White else Color.Black
+            val borderColor = if (isSelected) Orange else Color.LightGray
 
-            Button(
-                onClick = { onFilterSelected(filter) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSelected) Color(0xFFFF9800) else Color.White,
-                    contentColor = if (isSelected) Color.White else Color.Black
-                ),
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            Card(
                 modifier = Modifier
-                    .border(
-                        width = if (isSelected) 0.dp else 1.dp,
-                        color = if (isSelected) Color.Transparent else Color.LightGray,
-                        shape = RoundedCornerShape(16.dp)
-                    )
+                    .height(30.dp)
+                    .clickable { onFilterSelected(filter) }
+                    .border(1.dp, borderColor, RoundedCornerShape(12.dp)),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = backgroundColor)
             ) {
-                Text(text = filter)
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = filter,
+                        color = if (isSelected) Color.White else Color.LightGray,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun HomeScreenPreview() {
+    val mockShoes = listOf(
+        Shoes(
+            imageUrl = R.drawable.shoes1, // substitua por um drawable real no seu projeto
+            itemId = 1,
+            product = "Tênis Esportivo",
+            description = "Tênis leve e confortável para corridas.",
+            favorite = true,
+            price = 199.99,
+            star = 4
+        ),
+        Shoes(
+            imageUrl = R.drawable.shoes5,
+            itemId = 2,
+            product = "Bota de Couro",
+            description = "Ideal para trilhas e aventuras.",
+            favorite = false,
+            price = 299.99,
+            star = 5
+        ),
+        Shoes(
+            imageUrl = R.drawable.shoes1, // substitua por um drawable real no seu projeto
+            itemId = 3,
+            product = "Tênis Esportivo",
+            description = "Tênis leve e confortável para corridas.",
+            favorite = true,
+            price = 199.99,
+            star = 4
+        ),
+        Shoes(
+            imageUrl = R.drawable.shoes5,
+            itemId = 4,
+            product = "Bota de Couro",
+            description = "Ideal para trilhas e aventuras.",
+            favorite = false,
+            price = 299.99,
+            star = 5
+        )
+    )
+
+    val state = ShoesState(
+        searchQuery = "",
+        isLoading = false,
+        filteredShoes = mockShoes
+    )
+
+    // Usar um NavController fake para preview
+    val fakeNavController = rememberNavController()
+
+    HomeScreen(
+        state = state,
+        onIntent = {}, // Sem ação no preview
+        navController = fakeNavController
+    )
 }
