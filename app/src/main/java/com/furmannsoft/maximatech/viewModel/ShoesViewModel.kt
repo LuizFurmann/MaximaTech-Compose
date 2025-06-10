@@ -57,12 +57,33 @@ class ShoesViewModel(
                         it.product.contains(event.category, ignoreCase = true)
                     }
                 }
-                _state.value = _state.value.copy(shoes = filtered)
+
+                _state.value = _state.value.copy(
+                    shoes = repository.shoesList,
+                    filteredShoes = filtered,
+                    selectedFilter = event.category // <--- atualiza aqui!
+                )
             }
         }
     }
 
     fun getShoeById(id: Int): Shoes? {
         return repository.shoesList.find { it.itemId == id }
+    }
+
+    private fun filterByCategory(category: String) {
+        val filtered = if (category == "Todos") {
+            state.value.shoes
+        } else {
+            state.value.shoes.filter {
+                it.product.contains(category, ignoreCase = true)
+            }
+        }
+
+        _state.update {
+            it.copy(
+                filteredShoes = filtered
+            )
+        }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -66,7 +67,6 @@ fun HomeScreen(
     var searchText by remember { mutableStateOf("") }
 
     val filters = listOf("Todos", "Tênis", "Botas", "Chuteiras", "Sapatênis")
-    var selectedFilter by remember { mutableStateOf(filters.first()) }
 
     Column(
         modifier = Modifier
@@ -78,7 +78,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
-                .padding(top = 40.dp),
+                .padding(top = 20.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp
@@ -95,31 +95,45 @@ fun HomeScreen(
 
         FilterChips(
             filters = filters,
-            selectedFilter = selectedFilter,
+            selectedFilter = state.selectedFilter,
             onFilterSelected = {
-                selectedFilter = it
+                onIntent(ShoesIntent.SelectFilter(it))
             }
         )
 
-        if (state.isLoading) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(state.filteredShoes.size) { index ->
-                    val shoe = state.filteredShoes[index]
-                    ItemComponent(shoe, modifier = Modifier, navController)
+
+            if (state.filteredShoes.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 32.dp)
+                        .wrapContentHeight(align = Alignment.CenterVertically),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(
+                        text = "Nada para exibir em ${state.selectedFilter}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(state.filteredShoes.size) { index ->
+                        val shoe = state.filteredShoes[index]
+                        ItemComponent(shoe, modifier = Modifier, navController)
+                    }
                 }
             }
-        }
+
     }
 }
 
