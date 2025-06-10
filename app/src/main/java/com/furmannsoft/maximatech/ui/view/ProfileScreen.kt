@@ -1,5 +1,6 @@
 package com.furmannsoft.maximatech.ui.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ fun ProlifeScreen(modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 32.dp)
+            .background(Color.White)
             .wrapContentHeight(align = Alignment.CenterVertically),
         contentAlignment = Alignment.TopCenter
     ) {

@@ -6,9 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,22 +21,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,7 +46,6 @@ import com.furmannsoft.maximatech.model.ShoesIntent
 import com.furmannsoft.maximatech.model.ShoesState
 import com.furmannsoft.maximatech.ui.components.ItemComponent
 import com.furmannsoft.maximatech.ui.theme.Orange
-import com.furmannsoft.maximatech.viewModel.ShoesViewModel
 
 @Composable
 fun HomeScreen(
@@ -64,14 +53,13 @@ fun HomeScreen(
     onIntent: (ShoesIntent) -> Unit,
     navController: NavController
 ) {
-    var searchText by remember { mutableStateOf("") }
-
     val filters = listOf("Todos", "Tênis", "Botas", "Chuteiras", "Sapatênis")
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color.White)
+            .padding(16.dp),
     ) {
         Text(
             text = "Olá, Luiz",
@@ -100,39 +88,37 @@ fun HomeScreen(
                 onIntent(ShoesIntent.SelectFilter(it))
             }
         )
-
-
-            if (state.filteredShoes.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 32.dp)
-                        .wrapContentHeight(align = Alignment.CenterVertically),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    Text(
-                        text = "Nada para exibir em ${state.selectedFilter}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(state.filteredShoes.size) { index ->
-                        val shoe = state.filteredShoes[index]
-                        ItemComponent(shoe, modifier = Modifier, navController)
-                    }
+        if (state.filteredShoes.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 32.dp)
+                    .wrapContentHeight(align = Alignment.CenterVertically),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Text(
+                    text = "Nada para exibir em ${state.selectedFilter}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(state.filteredShoes.size) { index ->
+                    val shoe = state.filteredShoes[index]
+                    ItemComponent(shoe, modifier = Modifier, navController)
                 }
             }
+        }
 
     }
 }
@@ -237,7 +223,7 @@ fun FilterChips(
 fun HomeScreenPreview() {
     val mockShoes = listOf(
         Shoes(
-            imageUrl = R.drawable.shoes1, // substitua por um drawable real no seu projeto
+            imageUrl = R.drawable.shoes1,
             itemId = 1,
             product = "Tênis Esportivo",
             description = "Tênis leve e confortável para corridas.",
@@ -255,7 +241,7 @@ fun HomeScreenPreview() {
             star = 5
         ),
         Shoes(
-            imageUrl = R.drawable.shoes1, // substitua por um drawable real no seu projeto
+            imageUrl = R.drawable.shoes1,
             itemId = 3,
             product = "Tênis Esportivo",
             description = "Tênis leve e confortável para corridas.",
@@ -280,12 +266,11 @@ fun HomeScreenPreview() {
         filteredShoes = mockShoes
     )
 
-    // Usar um NavController fake para preview
     val fakeNavController = rememberNavController()
 
     HomeScreen(
         state = state,
-        onIntent = {}, // Sem ação no preview
+        onIntent = {},
         navController = fakeNavController
     )
 }

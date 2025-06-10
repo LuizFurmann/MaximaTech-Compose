@@ -5,10 +5,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -23,7 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.furmannsoft.maximatech.R
+import com.furmannsoft.maximatech.model.NavIcon
 import com.furmannsoft.maximatech.model.NavigationItems
 import com.furmannsoft.maximatech.viewModel.ShoesViewModel
 
@@ -35,9 +37,9 @@ fun MainScreen(
     shoesViewModel: ShoesViewModel
 ) {
     val navItemList = listOf(
-        NavigationItems("Home", Icons.Default.Home),
-        NavigationItems("Carrinho", Icons.Default.ShoppingCart),
-        NavigationItems("Perfil", Icons.Default.Person),
+        NavigationItems("Home", NavIcon.DrawableResIcon(R.drawable.home)),
+        NavigationItems("Carrinho", NavIcon.DrawableResIcon(R.drawable.cart)),
+        NavigationItems("Perfil", NavIcon.DrawableResIcon(R.drawable.profile)),
     )
 
     var selectedIndex by remember {
@@ -45,23 +47,39 @@ fun MainScreen(
     }
 
     Scaffold(
-        topBar = {
-            // Sem topo por enquanto
-        },
         bottomBar = {
+            Column {
+                Divider(
+                    color = Color.LightGray,
+                    thickness = 1.dp
+                )
             NavigationBar(
-                containerColor = Color.White  // fundo branco da NavigationBar
+                containerColor = Color.White
             ) {
                 navItemList.forEachIndexed { index, navigationItems ->
                     NavigationBarItem(
                         selected = selectedIndex == index,
                         onClick = { selectedIndex = index },
                         icon = {
-                            Icon(
-                                imageVector = navigationItems.icon,
-                                contentDescription = "Icon",
-                                tint = if (selectedIndex == index) Color(0xFFFF9800) /* Laranja */ else Color.Gray
-                            )
+                            when (navigationItems.icon) {
+                                is NavIcon.ImageVectorIcon -> {
+                                    Icon(
+                                        imageVector = (navigationItems.icon as NavIcon.ImageVectorIcon).imageVector,
+                                        contentDescription = navigationItems.label, // Use o label para acessibilidade
+                                        tint = if (selectedIndex == index) Color(0xFFFF9800) /* Laranja */ else Color.Gray,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+
+                                is NavIcon.DrawableResIcon -> {
+                                    Icon(
+                                        painter = painterResource(id = (navigationItems.icon as NavIcon.DrawableResIcon).drawableRes),
+                                        contentDescription = navigationItems.label, // Use o label para acessibilidade
+                                        tint = if (selectedIndex == index) Color(0xFFFF9800) /* Laranja */ else Color.Gray,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
                         },
                         label = {
                             Text(
@@ -74,11 +92,12 @@ fun MainScreen(
                             unselectedIconColor = Color.Gray,
                             selectedTextColor = Color(0xFFFF9800),
                             unselectedTextColor = Color.Gray,
-                            indicatorColor = Color.Transparent // Remove background color do item selecionado
+                            indicatorColor = Color.Transparent
                         )
                     )
                 }
             }
+        }
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {

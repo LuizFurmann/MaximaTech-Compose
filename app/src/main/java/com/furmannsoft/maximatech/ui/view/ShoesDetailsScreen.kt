@@ -2,6 +2,7 @@ package com.furmannsoft.maximatech.ui.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -40,8 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.furmannsoft.maximatech.R
 import com.furmannsoft.maximatech.model.Shoes
-import com.furmannsoft.maximatech.ui.theme.Dark
-import com.furmannsoft.maximatech.ui.theme.Orange
 
 @Composable
 fun ShoesDetailsScreen(
@@ -50,20 +51,32 @@ fun ShoesDetailsScreen(
     onAddToCartClick: (Shoes) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .verticalScroll(scrollState)
+    ) {
+        val imageHeight = if (LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+            200.dp
+        } else {
+            LocalConfiguration.current.screenHeightDp.dp / 2
+        }
+
         Image(
             painter = painterResource(id = shoe.imageUrl),
             contentDescription = shoe.product,
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(LocalConfiguration.current.screenHeightDp.dp / 2)
+                .height(imageHeight)
         )
 
         Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+                .fillMaxWidth(),
             shape = RectangleShape,
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -71,10 +84,10 @@ fun ShoesDetailsScreen(
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxSize()
+                    .fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -85,7 +98,7 @@ fun ShoesDetailsScreen(
                             text = shoe.product,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Dark,
+                            color = Color(0xFF212121),
                         )
                         IconButton(onClick = { onFavoriteClick(shoe) }) {
                             Icon(
@@ -96,12 +109,11 @@ fun ShoesDetailsScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(0.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Estrelas
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             repeat(5) { index ->
                                 val starColor = if (index < shoe.star) Color(0xFFFFC107) else Color.LightGray
@@ -123,7 +135,7 @@ fun ShoesDetailsScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(0.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
                         text = shoe.description,
@@ -135,15 +147,15 @@ fun ShoesDetailsScreen(
                         text = "R$ %.2f".format(shoe.price),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 50.dp, bottom = 16.dp),
-                        color = Dark,
+                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+                        color = Color(0xFF212121),
                     )
                 }
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = 0.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -153,7 +165,7 @@ fun ShoesDetailsScreen(
                             .height(48.dp)
                             .clickable { onAddToCartClick(shoe) },
                         shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(containerColor = Orange)
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFF9800))
                     ) {
                         Box(
                             contentAlignment = Alignment.Center,
@@ -172,20 +184,26 @@ fun ShoesDetailsScreen(
                         modifier = Modifier.size(48.dp),
                         shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
-                        border = BorderStroke(1.dp, Orange)
+                        border = BorderStroke(1.dp, Color(0xFFFF9800))
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "Carrinho",
-                            tint = Orange,
-                            modifier = Modifier.padding(12.dp)
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ShoppingCart,
+                                contentDescription = "Carrinho",
+                                tint = Color(0xFFFF9800),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun ShoesDetailsScreenPreview() {
