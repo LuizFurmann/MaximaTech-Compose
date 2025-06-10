@@ -61,7 +61,7 @@ class ShoesViewModel(
                 _state.value = _state.value.copy(
                     shoes = repository.shoesList,
                     filteredShoes = filtered,
-                    selectedFilter = event.category // <--- atualiza aqui!
+                    selectedFilter = event.category
                 )
             }
         }

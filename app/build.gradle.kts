@@ -62,6 +62,10 @@ dependencies {
     implementation(libs.accompanist.flowlayout)
     implementation(libs.androidx.navigation.compose)
 
+    testImplementation(libs.mockito.kotlin)
+
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.core.testing)
     implementation(libs.coil.compose)
 
     // Koin

@@ -51,13 +51,11 @@ fun ShoesDetailsScreen(
     onAddToCartClick: (Shoes) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
-            .verticalScroll(scrollState)
     ) {
         val imageHeight = if (LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
             200.dp
@@ -76,15 +74,19 @@ fun ShoesDetailsScreen(
 
         Card(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1f),
             shape = RectangleShape,
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
+            val cardScrollState = rememberScrollState()
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(cardScrollState)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
